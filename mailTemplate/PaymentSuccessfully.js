@@ -64,19 +64,19 @@ exports.productBuyEmail = (name,address,link) => {
     </head>
     <body>
     <div class="container">
-            <p class = "font-weight: bold;">www.shouseDekho.com</p>
+            <p class = "font-weight: bold;">https://gifty-shop.vercel.app/</p>
             <div class="message"> Order Confirmation</div>
             <div class="body">
                 <p>Dear ${name},</p>
-                <p>You have successfully Bought Shouse</p>
+                <p>You have successfully Bought Product</p>
                <div>
                <p> Phone Number : ${address.phoneNumber}</p>
                <p> Address : ${address.address}, ${address.locality}, ${address.city}, ${address.state}, -${address.pincode}</p>
                </div>
                 <a class="cta" href= ${link}>View Shouse</a>
             </div>
-            <div class="support">If you have any questions or need assistance, please feel free to reach out to us at <a
-                    href="mailto:anujvns28@gmail.com">info@www.shouseDekho.com</a>. We are here to help!</div>
+            <div class="support">If you have any questions or need assistance, please feel free to reach out to us at 
+            <a href="mailto:giftyshop78@gmail.com">giftyshop78@gmail.com</a>. We are here to help!</div>
         </div>
     </body>
     </html>`;

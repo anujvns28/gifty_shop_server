@@ -157,10 +157,14 @@ const addProduct = async(shouses, userId,addresId,res) => {
                
         // customor ko mail send kareo
             await mailSend(
-               addUser.email,
-               `Successfully bought ${shouseData.productName}`,
-                productBuyEmail(addUser.firstName,address, `http://localhost:3000/${shousesId}`)
-           )    
+              addUser.email,
+              `Successfully bought ${shouseData.productName}`,
+              productBuyEmail(
+                addUser.firstName,
+                address,
+                `giftyshop78@gmail.com/${shousesId}`
+              )
+            );    
            
            }
            catch(error) {
