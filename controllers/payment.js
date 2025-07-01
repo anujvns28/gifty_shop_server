@@ -3,70 +3,66 @@ const { productBuyEmail } = require("../mailTemplate/PaymentSuccessfully");
 const Product = require("../model/Product");
 const User = require("../model/User");
 const Address = require("../model/address");
+require("dotenv").config();
 
 const crypto = require("crypto");
 const { mailSend } = require("../utility/mailSender");
 
 //initiate the razorpay order
-exports.capturePayment = async(req, res) => {
+exports.capturePayment = async (req, res) => {
+  const { shouses } = req.body;
 
-    const {shouses} = req.body;
+  if (shouses.length === 0) {
+    return res.json({
+      success: false,
+      message: "Please provide shouse Id",
+    });
+  }
 
-    if(shouses.length === 0) {
-        return res.json({
-            success:false,
-            message:"Please provide shouse Id"
-            });
-    }
+  let totalAmount = 0;
 
-    let totalAmount = 0;
-
-    for(const shouse_id of shouses) {
-        let shouse;
-        try{
-           
-            shouse = await Product.findById(shouse_id);
-            if(!shouse) {
-                return res.status(200).json({
-                    success:false,
-                     message:"Could not find the shouse"
-                });
-            }
-            
-            totalAmount += shouse.price;
-        }
-        catch(error) {
-            console.log(error,"eror occuring");
-            return res.status(500).json({
-                success:false,
-                 message:error.message
-            });
-        }
-
-    }
-    const currency = "INR";
-    const options = {
-        amount: totalAmount * 100,
-        currency,
-        receipt: Math.random(Date.now()).toString(),
-    }
-
-    try{
-        const paymentResponse = await instance.orders.create(options);
-        res.json({
-            success:true,
-            message:paymentResponse,
-        })
-    }
-    catch(error) {
-        console.log(error,"erroro occuring ji");
-        return res.status(500).json({
-            success:false, 
-            mesage:"Could not Irnitiate Orde"
+  for (const shouse_id of shouses) {
+    let shouse;
+    try {
+      shouse = await Product.findById(shouse_id);
+      if (!shouse) {
+        return res.status(200).json({
+          success: false,
+          message: "Could not find the shouse",
         });
-    }
+      }
 
-}
+      totalAmount += shouse.price;
+    } catch (error) {
+      console.log(error, "eror occuring");
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+  const currency = "INR";
+  const options = {
+    amount: totalAmount * 100,
+    currency,
+    receipt: Math.random(Date.now()).toString(),
+  };
+
+  try {
+    const paymentResponse = await instance.orders.create(options);
+    console.log(paymentResponse, "this is payment response");
+    res.json({
+      success: true,
+      message: paymentResponse,
+    });
+  } catch (error) {
+    console.log(error, "erroro occuring ji");
+    return res.status(500).json({
+      success: false,
+      mesage: "Could not Irnitiate Orde",
+    });
+  }
+};
 
 
 //verify the payment
