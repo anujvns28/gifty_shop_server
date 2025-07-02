@@ -12,10 +12,9 @@ const categoriesRoutes = require("./routes/categories");
 const subCategoriesRoutes = require("./routes/subCategories");
 const productRoutes = require("./routes/product");
 const paymentRoutes = require("./routes/payment");
-const { cloudinaryConnect } = require('./config/cloudenary');
-const { default: axios } = require('axios');
-
-
+const orderRoutes = require("./routes/order");
+const { cloudinaryConnect } = require("./config/cloudenary");
+const { default: axios } = require("axios");
 
 const port = process.env.PORT || 4000;
 
@@ -31,24 +30,25 @@ cloudinaryConnect();
 app.use(express.json());
 
 app.use(
-	cors({
-		origin: "*",
-		credentials: true,
-	})
+  cors({
+    origin: "*",
+    credentials: true,
+  })
 );
 
 app.use(
-	fileUpload({
-		useTempFiles: true,
-		tempFileDir: "/tmp/",
-	})
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+  })
 );
 //mounting
-app.use("/api/v1/auth",authRoutes)
-app.use("/api/v1/category",categoriesRoutes)
-app.use("/api/v1/subCategory",subCategoriesRoutes)
-app.use("/api/v1/product",productRoutes)
-app.use("/api/v1/payment",paymentRoutes)
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/category", categoriesRoutes);
+app.use("/api/v1/subCategory", subCategoriesRoutes);
+app.use("/api/v1/product", productRoutes);
+app.use("/api/v1/payment", paymentRoutes);
+app.use("/api/v1/orders", orderRoutes);
 
 // Add keep-alive endpoint
 app.get('/keep-alive', (req, res) => {
