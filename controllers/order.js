@@ -236,6 +236,74 @@ exports.updateOrderStatus = async (req, res) => {
   }
 };
 
+exports.getAllOrdersForAdmin = async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate("userId")
+      .populate("addressId")
+      .populate("productId", "productName mainImage price")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ success: true, orders });
+  } catch (error) {
+    console.error("Error fetching orders for admin:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+exports.updateOrderStatusForAdmin = async (req, res) => {
+  try {
+    const { orderId, status } = req.body;
+    console.log("Updating order status for admin:", orderId, status);
+
+    if (!orderId || !status) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing orderId or status",
+      });
+    }
+
+    const allowedStatuses = [
+      "Processing",
+      "Shipped",
+      "Out for Delivery",
+      "Delivered",
+      "Cancelled",
+    ];
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid status value",
+      });
+    }
+
+    const updatedOrder = await Order.findByIdAndUpdate(
+      orderId,
+      { orderStatus: status },
+      { new: true }
+    );
+
+    if (!updatedOrder) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Order status updated successfully",
+      order: updatedOrder,
+    });
+  } catch (error) {
+    console.error("Error updating order status for admin:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
 
 
 
